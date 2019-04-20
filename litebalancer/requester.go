@@ -1,14 +1,14 @@
 package litebalancer
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
 
 type Requester struct {
-	Fn   func() interface{}
-	Work chan Request
+	Fn    func() interface{}
+	RetFn func(interface{})
+	Work  chan Request
 }
 
 func (rq *Requester) MakeRequest(work chan<- Request) {
@@ -17,11 +17,11 @@ func (rq *Requester) MakeRequest(work chan<- Request) {
 		time.Sleep(time.Duration(rand.Int63n(int64(time.Millisecond))))
 		work <- Request{rq.Fn, c}
 		res := <-c
-		fmt.Println(res)
+		rq.RetFn(res)
 	}
 }
 
-func NewRequester(fn func() interface{}) *Requester {
-	r := Requester{fn, make(chan Request)}
+func NewRequester(fn func() interface{}, rfn func(interface{})) *Requester {
+	r := Requester{fn, rfn, make(chan Request)}
 	return &r
 }
