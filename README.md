@@ -6,14 +6,24 @@
 
 # How to use
 
-    Create a start function that receives a slice of interface and returns an interface
+    Create a start function that receives a slice of interface and returns an interface.
+	Create a end function if needed the receives a type of interface that will come 
+	from the start function.
+	If there is a need for dynamic arguments to the start function, they can be provided
+	in the creation of the new request.
     
 
 # Example
 
-    This example is how to run the load balancer for N amount of time, maxWork being the N value. 
-    Notice the call of NewBalancer has also changed and has an extra variable. 
-    In this example we only want to print 1000 random numbers.
+    This example is how to run the load balancer for N amount of time, maxWork being the N value.
+	No value has to be given to the balancer and -1 will be set as default.
+
+	Start function: randoNumbers
+	End function: printNumbers
+	Requesters: 10
+	Workers: 10
+	N: 1000
+    
 
 ``` go
 package main
