@@ -18,7 +18,9 @@ func (rq *Requester) MakeRequest(work chan<- Request, args ...interface{}) {
 		time.Sleep(time.Duration(rand.Int63n(int64(time.Millisecond))))
 		work <- Request{rq.Fn, args, c}
 		res := <-c
-		rq.RetFn(res)
+		if rq.RetFn != nil {
+			rq.RetFn(res)
+		}
 	}
 }
 
@@ -27,8 +29,9 @@ func NewRequester(
 ) (r *Requester, err error) {
 	if len(fns) == 1 {
 		r = &Requester{
-			Fn:   fns[0].(func([]interface{}) interface{}),
-			Work: make(chan Request),
+			Fn:    fns[0].(func([]interface{}) interface{}),
+			RetFn: nil,
+			Work:  make(chan Request),
 		}
 	} else if len(fns) == 2 {
 		r = &Requester{
