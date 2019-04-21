@@ -16,7 +16,7 @@
     
     This example is how to run the load balancer for infinite amount of time.
 
-    '''go
+    ``` go
     package main
 
     import (
@@ -52,13 +52,13 @@
         // run a new balancer to handle work
         litebalancer.NewBalancer(numRequesters, numWorkers).Balance(rq.Work)
     }
-    '''
+    ```
 
     This example is how to run the load balancer for N amount of time, maxWork being the N value. 
     Notice the call of NewBalancer has also changed and has an extra variable. 
     In this example we only want to print 1000 random numbers.
 
-    '''go
+    ``` go
     package main
 
     import (
@@ -95,4 +95,4 @@
         // run a new balancer to handle work
         litebalancer.NewBalancer(numRequesters, numWorkers, maxWork).Balance(rq.Work)
     }
-    '''
+    ```
