@@ -19,16 +19,23 @@ func (p *Pool) Pop() interface{} {
 }
 
 type Balancer struct {
-	pool Pool
-	done chan *Worker
+	pool      Pool
+	done      chan *Worker
+	Completed int
+	Max       int
 }
 
-func NewBalancer(nRequester int, nWorker int) *Balancer {
-	done := make(chan *Worker, nWorker)
+func NewBalancer(nums ...int) *Balancer {
+	var b *Balancer
+	done := make(chan *Worker, nums[1])
 	// create nWorker WOK channels
-	b := &Balancer{make(Pool, 0, nWorker), done}
-	for i := 0; i < nWorker; i++ {
-		w := &Worker{requests: make(chan Request, nRequester)}
+	if len(nums) > 2 {
+		b = &Balancer{make(Pool, 0, nums[1]), done, 0, nums[2]}
+	} else {
+		b = &Balancer{make(Pool, 0, nums[1]), done, 0, -1}
+	}
+	for i := 0; i < nums[1]; i++ {
+		w := &Worker{requests: make(chan Request, nums[0])}
 		// put them in heap
 		heap.Push(&b.pool, w)
 		go w.Work(b.done)
@@ -43,6 +50,12 @@ func (b *Balancer) Balance(work chan Request) {
 			b.dispatch(req)
 		case w := <-b.done:
 			b.completed(w)
+			b.Completed++
+			if b.Max == -1 {
+				continue
+			} else if b.Completed == b.Max {
+				return
+			}
 		}
 	}
 }
