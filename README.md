@@ -57,7 +57,7 @@ func main() {
 	const numWorkers = 10
 	// if maxWork is not supplied a value of -1 will be applied
 	// if value of maxWork is -1, the balancer will run forever
-	const maxWork = 100
+	const maxWork = 1000
 
 	// initialize arguments for start function
 	args := make([]interface{}, 2)
