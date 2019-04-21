@@ -1,7 +1,8 @@
 package litebalancer
 
 type Request struct {
-	Fn       func() interface{}
+	Fn       func([]interface{}) interface{}
+	Args     []interface{}
 	Response chan interface{}
 }
 
@@ -14,7 +15,7 @@ type Worker struct {
 func (w *Worker) Work(done chan *Worker) {
 	for {
 		req := <-w.requests
-		req.Response <- req.Fn()
+		req.Response <- req.Fn(req.Args)
 		done <- w
 	}
 }
