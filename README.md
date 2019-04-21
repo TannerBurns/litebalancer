@@ -37,8 +37,13 @@ import (
 )
 
 // function that returns type interface to generate data
+// args will be a slice of the arguments provided
+// args[0] will need to be typecasted into the appropriate datatype
 func randoNumbers(args []interface{}) interface{} {
-	return rand.Intn((args[1].(int) - args[0].(int)) + args[0].(int))
+	nums := args[0].([]int)
+	min := nums[0]
+	max := nums[1]
+	return rand.Intn((max - min) + min)
 }
 
 // function that receives type interface to display the data
@@ -52,15 +57,14 @@ func main() {
 	const numWorkers = 10
 	// if maxWork is not supplied a value of -1 will be applied
 	// if value of maxWork is -1, the balancer will run forever
-	const maxWork = 1000
+	const maxWork = 100
 
 	// initialize arguments for start function
 	args := make([]interface{}, 2)
 	args[0] = 1
 	args[1] = 50
 
-    rq, err := litebalancer.NewRequester(randoNumbers, printNumbers)
-    // check to make sure requester is ready
+	rq, err := litebalancer.NewRequester(randoNumbers, printNumbers)
 	if err != nil {
 		log.Fatal(err)
 	}

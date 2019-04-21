@@ -12,7 +12,7 @@ type Requester struct {
 	Work  chan Request
 }
 
-func (rq *Requester) MakeRequest(work chan<- Request, args []interface{}) {
+func (rq *Requester) MakeRequest(work chan<- Request, args ...interface{}) {
 	c := make(chan interface{})
 	for {
 		time.Sleep(time.Duration(rand.Int63n(int64(time.Millisecond))))
