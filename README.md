@@ -4,6 +4,10 @@
     
     Requester -> Balancer -> Request -> Requester
 
+# Requirements
+
+	go get github.com/TannerBurns/litebalancer/litebalancer
+
 # How to use
 
     Create a start function that receives a slice of interface and returns an interface.
