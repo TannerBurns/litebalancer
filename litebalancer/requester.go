@@ -2,7 +2,6 @@ package litebalancer
 
 import (
 	"errors"
-	"math/rand"
 	"time"
 )
 
@@ -15,12 +14,13 @@ type Requester struct {
 func (rq *Requester) MakeRequest(work chan<- Request, args ...interface{}) {
 	c := make(chan interface{})
 	for {
-		time.Sleep(time.Duration(rand.Int63n(int64(time.Millisecond))))
+		time.Sleep(20 * time.Millisecond)
 		work <- Request{rq.Fn, args, c}
 		res := <-c
 		if rq.RetFn != nil {
 			rq.RetFn(res)
 		}
+
 	}
 }
 

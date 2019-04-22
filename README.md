@@ -87,3 +87,50 @@ func main() {
 	)
 }
 ```
+
+```go
+package main
+
+import (
+	"log"
+	"math/rand"
+	"time"
+
+	"github.com/TannerBurns/litebalancer/litebalancer"
+)
+
+// function that returns type interface to generate data
+func randoNumbers(args []interface{}) interface{} {
+	return rand.Intn((50 - 1) + 1)
+}
+
+func main() {
+	start := time.Now()
+
+	// initialize number of requesters, workers and maxwork allowed
+	const numRequesters = 1500
+	const numWorkers = 1000
+	const maxWork = 10000000
+
+	rq, err := litebalancer.NewRequester(randoNumbers)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// initialize work for requesters, arguments can be sent to start function
+	// when make request is made to link the arguments and start function
+	for i := 0; i < numRequesters; i++ {
+		go rq.MakeRequest(rq.Work)
+	}
+	// run a new balancer to handle work
+	litebalancer.NewBalancer(
+		numRequesters,
+		numWorkers,
+		maxWork,
+	).Balance(
+		rq.Work,
+	)
+	elapsed := time.Since(start)
+	fmt.Printf("10M random numbers took %s", elapsed)
+}
+
+```
