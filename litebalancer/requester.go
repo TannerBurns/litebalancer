@@ -14,7 +14,7 @@ type Requester struct {
 func (rq *Requester) MakeRequest(work chan<- Request, args ...interface{}) {
 	c := make(chan interface{})
 	for {
-		time.Sleep(20 * time.Millisecond)
+		time.Sleep((1 * time.Millisecond) / 2)
 		work <- Request{rq.Fn, args, c}
 		res := <-c
 		if rq.RetFn != nil {
